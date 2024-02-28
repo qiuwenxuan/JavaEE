@@ -13,6 +13,7 @@ public class Main {
         for (String arr : array) {
             System.out.print(arr + "\s");
         }
+        System.out.println("the end...");
     }
 
 }
