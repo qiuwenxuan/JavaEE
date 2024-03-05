@@ -1,9 +1,17 @@
-class Shape {
-    final void display() {
-        System.out.println("This is a shape.");
+class Fa {
+    public void method() {
+        System.out.println("我是父类的方法");
     }
 }
 
-class Circle extends Shape {
-    final int COUNT_VALUE = 10;
+class Demo {
+    public static void main(String[] args) {
+        Fa f = new Fa() {
+            @Override
+            public void method() {
+                System.out.println("我是子类的方法");
+            }
+        };
+        f.method();
+    }
 }
