@@ -1,4 +1,13 @@
-public class Person {
+interface eatting {
+    void eat();
+}
+
+interface jumping {
+    void jumping();
+}
+
+public class Person implements eatting, jumping {
+
     private String name;
     private int age;
 
@@ -56,5 +65,15 @@ public class Person {
     @Override
     public String toString() {
         return super.toString();
+    }
+
+    @Override
+    public void eat() {
+        System.out.println("person can eat!");
+    }
+
+    @Override
+    public void jumping() {
+        System.out.println("person can jumping");
     }
 }

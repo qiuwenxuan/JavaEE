@@ -1,105 +1,66 @@
+import java.util.*;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.stream.Stream;
+
 public class Main {
-    private static class People {
-        public int age;
-        public String name;
-
-        public People() {
-
-        }
-
-        public People(int age) {
-            this.age = age;
-        }
-
-        public People(int age, String name) {
-            this.age = age;
-            this.name = name;
-        }
-
-        public int getAge() {
-            return age;
-        }
-
-        public void setAge(int age) {
-            this.age = age;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
-
-        public void show() {
-            System.out.println("name=" + name + " age=" + age);
-        }
-
-        public void show(String name, int age) {
-            System.out.println("name=" + name + " age=" + age);
-        }
-    }
-
-    @FunctionalInterface
-    private interface GeneratePeople { //返回People的无参构造方法接口
-        People generate();
-    }
-
-    @FunctionalInterface
-    private interface GetValue {
-        int getValue(People p);
-    }
-
-    @FunctionalInterface
-    private interface SetValue {
-        void setValue(People p, String name);
-    }
-
-    @FunctionalInterface
-    private interface ShowTest {
-        void show(People p);
-    }
-
-    @FunctionalInterface
-    private interface ShowTest1 {
-        void show(People p, String name, int age);
-    }
-
-    private static int y = 10;
-
     public static void main(String[] args) {
-//        GetPeople1 p1 = () -> new People();
-        GeneratePeople genteratePeople = People::new;
-        People p = genteratePeople.generate();
+        /* filter      过滤
+         * limit       获取前几个元素
+         * skip        跳过前几个元素
+         * */
+        ArrayList<String> list = new ArrayList<>();
+        Collections.addAll(list, "张无忌", "周芷若", "赵敏", "张强", "张三丰", "张翠山", "张良", "谢广坤", "张无忌");
 
-//        SetValue setValue = (p1, name) -> p1.setName(name);
-        SetValue setValue = People::setName;
-        setValue.setValue(p, "wenxuan");
 
-        p.setAge(10);
-//        GetValue getValue = (p2) -> p2.getAge();
-        GetValue getValue = People::getAge;
-        int age = getValue.getValue(p);
-        System.out.println(age);
+        list.stream()
+                .limit(3)
+                .forEach(s -> System.out.print(s + " "));  //获取前三个
 
-//        Show show = (p3) -> p3.show();
-        ShowTest show1 = People::show;
-        show1.show(p);
+        System.out.println();
+        list.stream()
+                .skip(3)
+                .forEach(s -> System.out.print(s + " "));  //跳过前三个
+        System.out.println();
 
-//        ShowTest1 show2 = (p4, a, b) -> p4.show(a, b);
-        ShowTest1 show2 = People::show;
-        show2.show(p, "wenxuan", 18);
+        list.stream()  //方法1，先获取前六个，再跳过前三个元素，获取到【张强 张三丰 张翠山】
+                .limit(6)
+                .skip(3)
+                .forEach(s -> System.out.print(s + " "));
+        System.out.println();
 
-        int x = 10;
-        LambdaTest lambdaTest = () -> {
-            System.out.println("x=" + x);
-            System.out.println("y=" + y);
-        };
-        y = 20;
-    }
+        list.stream()
+                .skip(3)
+                .limit(3)
+                .forEach(s -> System.out.print(s + " "));
 
-    interface LambdaTest {
-        void test();
+        list.stream()
+                .distinct()  //元素去重
+                .forEach(s -> System.out.println(s));
+
+        ArrayList<String> list1 = new ArrayList<>();
+        Collections.addAll(list1, "张无忌", "周芷若", "赵敏");
+
+        ArrayList<String> list2 = new ArrayList<>();
+        Collections.addAll(list2, "张强", "张三丰", "张翠山", "张良", "谢广坤", "张无忌");
+
+        Stream.concat(list1.stream(), list2.stream()).forEach(s -> System.out.println(s));
+
+        ArrayList<String> list3 = new ArrayList<>();
+        Collections.addAll(list3, "张无忌-15", "周芷若-18", "赵敏-26", "张强-25", "张三丰-13", "张翠山-11", "张良-86", "谢广坤-27");
+
+        list3.stream().map(new Function<String, Integer>() {
+
+            @Override
+            public Integer apply(String s) {
+                String[] arr = s.split("-");
+                String ageString = arr[1];
+                int age = Integer.parseInt(ageString);
+                return age;
+            }
+        }).forEach(s -> System.out.println(s));
+
+        list3.stream().map(s -> Integer.parseInt(s.split("-")[1])).forEach(s -> System.out.println(s));
     }
 }

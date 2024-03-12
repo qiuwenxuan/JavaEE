@@ -40,35 +40,20 @@ class Student { // 实现Comparable接口
 
 public class TreeSetTest {
     public static void main(String[] args) {
-        HashMap<String, Object> map = new HashMap<String, Object>();
+        HashMap<Object, Object> map = new HashMap<Object, Object>();
 
         map.put("name", "张三");
         map.put("age", 18);
         map.put("gender", "man");
-        System.out.println("=======================迭代器========================");
 
-        Iterator<Map.Entry<String, Object>> iterator = map.entrySet().iterator();
-        while (iterator.hasNext()) {
-            Map.Entry<String, Object> entry = iterator.next();
-            String key = entry.getKey();
+        Iterator<Map.Entry<Object, Object>> it = map.entrySet().iterator();
+        while (it.hasNext()) {
+            Map.Entry<Object, Object> entry = it.next();
+            Object key = entry.getKey();
             Object value = entry.getValue();
+
             System.out.println(key + "=" + value);
         }
-        System.out.println("=======================增强for循环+entrySet()方法========================");
 
-        for (Map.Entry<String, Object> entry : map.entrySet()) {
-            String key = entry.getKey();
-            Object value = entry.getValue();
-            System.out.println(key + "=" + value);
-        }
-        System.out.println("=======================增强for循环+map.get()方法========================");
-
-        for (String key : map.keySet()) {
-            Object value = map.get(key);
-            System.out.println(key + "=" + value);
-        }
-        System.out.println("=======================foreach方法========================");
-
-        map.forEach((key, value) -> System.out.println(key + "=" + value));
     }
 }

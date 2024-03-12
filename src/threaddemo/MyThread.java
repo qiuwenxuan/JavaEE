@@ -1,40 +1,85 @@
 package threaddemo;
 
 import java.util.concurrent.Callable;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * @Author: qiuwenxuan
  * @DateTime: 2024/3/7 12:53
  * @Description: TODO:
  **/
-public class MyThread extends Thread {
+class MyThread1 extends Thread {
+    static int ticket = 0;
+
+    static Lock lock = new ReentrantLock();
+//    static ReentrantLock lock = new ReentrantLock();
+
+    public MyThread1() {
+    }
+
+    public MyThread1(String name) {
+        super(name);
+    }
+
     @Override
     public void run() {
-        for (int i = 0; i < 10; i++) {
-            System.out.println(getName() + "=" + i);
+        try {
+            while (true) {
+                lock.lock();
+                if (ticket == 100) {
+                    break;
+                } else {
+                    Thread.sleep(10);
+                    ticket++;
+                    System.out.println(getName() + "正在卖第" + ticket + "张票！");
+                    lock.unlock();
+                }
+            }
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
         }
     }
-}
 
-class PrimeRun implements Runnable {
+    class MyThread2 extends Thread {
+        public MyThread2() {
+        }
 
-    @Override
-    public void run() {
-        Thread t = Thread.currentThread(); //获取当前调用run方法的线程对象
-        for (int i = 0; i < 10; i++) {
-            System.out.println(t.getName() + "=" + i);
+        public MyThread2(String name) {
+            super(name);
+        }
+
+        @Override
+        public void run() {
+            for (int i = 1; i < 100; i++) {
+                System.out.println(getName() + "=" + i);
+            }
         }
     }
-}
 
-class Mycallable implements Callable<Integer> {  //Callable需要一个泛型表示返回值的类型
+    class RunnableThread implements Runnable {
+        int ticket = 1;
 
-    @Override
-    public Integer call() throws Exception {
-        int sum = 0;
-        for (int i = 1; i <= 100; i++) {
-            sum += i;
+        @Override
+        public void run() {
+            while (true) {
+
+            }
         }
-        return sum;
+
+        private synchronized boolean synchronizedMethod() {
+            if (ticket == 100) {
+                return true;
+            } else {
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+                ticket++;
+                System.out.println(Thread.currentThread().getName() + "卖了第" + ticket + "张票！");
+            }
+            return false;
+        }
     }
 }
